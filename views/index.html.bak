@@ -306,17 +306,13 @@ scheduleRecheck();</script></head>
 <p>
 <span class="cmd">git clone --recurse-submodules<span class="url">
                 {{mask}}{{https://github.com/QuiteAFancyEmerald/Holy-Unblocker.git}}</span> </span><br/>
-<span class="cmd">cd {{mask}}{{Holy-Unblocker}}
-</span><br/>
+<span class="cmd">cd {{mask}}{{Holy-Unblocker}}</span><br/>
 <span class="comment">For first-time setup on a production branch...</span><br/>
-<span class="cmd">npm run fresh-start
-</span><br/>
+<span class="cmd">npm run fresh-start</span><br/>
 <span class="comment">Or typical uses...</span><br/>
-<span class="cmd">npm start
-</span><br/>
+<span class="cmd">npm start</span><br/>
 <span class="comment">Or on subsequent uses...</span><br/>
-<span class="cmd">npm restart
-</span><br/><br/>
+<span class="cmd">npm restart</span><br/><br/>
 <span class="comment">{{mask}}{{Holy Unblocker LTS}} v{{version}} // master</span><br/>
 <span class="comment">Node.js v20.x</span><br/>
 <span class="comment">Fastify v5.4.0</span><br/><br/>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Receive & Activate</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .msg { font-size: 1.2em; margin-top: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Activation Receiver</h2>
+  <div id="output">Processing…</div>
+
+  <script>
+    function base64decode(str) { return decodeURIComponent(escape(atob(str))); }
+    function hexToStr(hex) {
+      let out = "";
+      for (let i=0;i<hex.length;i+=2) out += String.fromCharCode(parseInt(hex.substr(i,2),16));
+      return out;
+    }
+    function decodeChain(str) {
+      let result = hexToStr(str); // unwrap final hex
+      const steps = [hexToStr, base64decode, hexToStr, base64decode, hexToStr, base64decode];
+      for (const step of steps) result = step(result);
+      return result;
+    }
+    function checksum(str) {
+      let sum = 0;
+      for (let i=0;i<str.length;i++) sum = (sum + str.charCodeAt(i)*(i+1)) % 100000;
+      return sum.toString().padStart(5,"0");
+    }
+
+    function setAccessCookie(expiryIso) {
+      document.cookie = `access=1|${expiryIso}; path=/; expires=${new Date(expiryIso).toUTCString()}`;
+    }
+
+    function main() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("a");
+      if (!code) { document.getElementById("output").textContent = "No code provided."; return; }
+      try {
+        const decoded = decodeChain(code);
+        const parts = decoded.split(":");
+        if (parts.length < 4) throw new Error("Invalid payload");
+        const [date, time, year, chk] = parts;
+        const raw = `${date}:${time}:${year}`;
+        if (checksum(raw) !== chk) throw new Error("Checksum mismatch");
+        const expiryIso = `${date}T${time}Z`;
+        setAccessCookie(expiryIso);
+        document.getElementById("output").innerHTML =
+          `<div class="msg">Cookie set! Expires at ${expiryIso}</div>`;
+      } catch (e) {
+        document.getElementById("output").textContent = "Error decoding: " + e.message;
+      }
+    }
+    main();
+  </script>
+</body>
+</html>
