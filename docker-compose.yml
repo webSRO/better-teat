@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  holy-unblocker:
+    image: webSRO/better-teat:6.9.3
+    build: .
+    container_name: Holly
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
